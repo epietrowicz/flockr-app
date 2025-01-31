@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    container_name: flocker-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    devices:
+      - "/dev/video0:/dev/video0"

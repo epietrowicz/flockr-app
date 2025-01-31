@@ -1,0 +1,7 @@
+# To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
+opencv-python
+Pillow
+pysqlite3
+tflite_support==0.4.3
+flask
+flask-socketio

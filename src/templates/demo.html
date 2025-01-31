@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Capture</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+</head>
+
+<body>
+    <h1>Sample Video Feed</h1>
+    <p id="textDisplay">Waiting for updates...</p>
+    <img src="{{ url_for('demo_video') }}" width="640" height="480">
+    <button onclick="sendRewind()">&laquo; RWD</button>
+    <button onclick="sendFastForward()">FWD &raquo;</button>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('result', function (data) {
+            document.getElementById('textDisplay').innerText = data.result;
+        });
+
+        function sendFastForward(direction) {
+            socket.emit('fast_forward');
+        }
+        function sendRewind(direction) {
+            socket.emit('rewind');
+        }
+    </script>
+</body>
+
+</html>
