@@ -1,10 +1,7 @@
-To build: `docker build -t flocker-app .`
+To build: `docker-compose up --build`
 
-To run the container: `docker run --rm -it -v "$(pwd):/app" --device=/dev/video0:/dev/video0 flocker-app`
+To run the container: `docker-compose up`
 
-Update webcam permissions:
-```bash
-sudo chmod 777 /dev/video0
-```
+Navigate to <rpi_ip>:5000 with any browser on the same network.
 
-Or using docker compose `docker-compose up (--build)`
+Make sure that the Particle board and USB camera are plugged in **before** starting up the container.
