@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Capture</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
-</head>
+{% block content %}
 
 <body>
     <h1>Live Video Feed</h1>
@@ -19,5 +13,4 @@
         });
     </script>
 </body>
-
-</html>
+{% endblock %}

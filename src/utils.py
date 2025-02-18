@@ -5,13 +5,18 @@ import sqlite3
 from tflite_support.task import core
 from tflite_support.task import processor
 from tflite_support.task import vision
+import serial
+import base64
+import time
 
-VIDEO_PATH = "test-video-2.mp4"  # Replace with your local video path
 THRESHOLD = 0.7
 NAMEDBPATH = "birdnames.db"
+SERIAL_DEV = "/dev/ttyACM0"
 
 should_ff = True
 should_rw = False
+last_bird_seen = None
+ser = serial.Serial(SERIAL_DEV, 115200)
 
 # Initialize the image classification model
 base_options = core.BaseOptions(
@@ -93,9 +98,29 @@ def rewind():
     global should_rw
     should_rw = True
 
+def send_image(frame):
+    resized = cv2.resize(frame, (160, 120))
+    
+    _, compressed_buffer = cv2.imencode('.jpg', resized, [cv2.IMWRITE_JPEG_QUALITY, 60])
+    base64_string = base64.b64encode(compressed_buffer).decode("utf-8")
+    ser.write(b"START\n")
+
+    # Send data over serial in chunks
+    chunk_size = 512  # Adjust based on buffer limits
+    for i in range(0, len(base64_string), chunk_size):
+        chunk = base64_string[i : i + chunk_size]
+        segment = chunk.encode() + b"\n"
+        ser.write(segment)  # Send each chunk as a line
+        time.sleep(0.05)
+
+    ser.write(b"END\n")
+    print("Image sent successfully")
+
 def generate_frames(is_live, socketio):
     global should_ff
     global should_rw
+    global last_bird_seen
+    global ser
     if is_live:
         cap = cv2.VideoCapture(0)
     else: 
@@ -125,28 +150,41 @@ def generate_frames(is_live, socketio):
             should_rw = False
 
         # Process every frame_interval-th frame (approx 1 second apart)
+        start_time = time.time()
+        _, buffer = cv2.imencode(".jpg", frame)
 
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        np_image = format_frame(frame_rgb)
-        categories = classify(np_image)
-        category = categories[0]
-        index = category.index
-        score = category.score
-        display_name = category.display_name
+        if frame_count % frame_interval == 0:
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            np_image = format_frame(frame_rgb)
+            categories = classify(np_image)
+            category = categories[0]
+            index = category.index
+            score = category.score
+            display_name = category.display_name
 
-        if index != 964 and score > THRESHOLD:
-            timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000
-            common_name = get_common_name(display_name)
-            result_text = [f"Label: {common_name}", f"Score: {score}"]
-            print(f"Timestamp: {timestamp} seconds, {result_text}")
-            frame_text = result_text
-        else:
-            frame_text = ["Unknown"]
+            if index != 964 and score > THRESHOLD:
+                timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000
+                common_name = get_common_name(display_name)
+                if common_name != last_bird_seen:
+                    # emit serial info
+                    # print(f"Sending {common_name}")
+                    
+                    send_image(frame)
+                    serial_str = f"INFERENCE={common_name},{score}\n"
+                    ser.write(serial_str.encode())
+                    last_bird_seen = common_name
+                result_text = [f"Label: {common_name} Score: {score}"]
+                print(f"Timestamp: {timestamp} seconds, {result_text}")
+                frame_text = result_text
+            else:
+                frame_text = ["Unknown"]
 
         socketio.emit("result", {'result': frame_text})
-        _, buffer = cv2.imencode(".jpg", frame)
         yield (
             b"--frame\r\n"
             b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n"
         )
+        elapsed_time = time.time() - start_time
+        sleep_time = max(1.0 / fps - elapsed_time, 0)
+        time.sleep(sleep_time)
         frame_count += 1  # Increase frame count

@@ -5,3 +5,4 @@ pysqlite3
 tflite_support==0.4.3
 flask
 flask-socketio
+pyserial

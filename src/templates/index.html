@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flockr Home</title>
-</head>
+{% block content %}
 
 <body>
     <h1>Flockr</h1>
-    <a href="{{ url_for('demo') }}">Sample Stream</a>
-    <a href="{{ url_for('capture') }}">Live Feed</a>
+    <a class="btn" href="{{ url_for('demo') }}">Sample Stream</a>
+    <a class="btn" href="{{ url_for('capture') }}">Live Feed</a>
 </body>
-
-</html>
+{% endblock %}

@@ -8,3 +8,4 @@ services:
       - .:/app
     devices:
       - "/dev/video0:/dev/video0"
+      - "/dev/ttyACM0:/dev/ttyACM0"
