@@ -1,5 +1,5 @@
 # Flockr
-Flockr uses a Tensor Flow Lite model to classify the species of a bird. The classificaiton runs locally on a Raspberry Pi 5 and transmits the Base64 encoded image and the classifcation results over serial to a [Particle Boron](https://store.particle.io/products/boron-lte-cat-m1-noram-with-ethersim-4th-gen). The Particle device is responsible for sending this data to the cloud via LTE. 
+Flockr uses a [Tensor Flow Lite model](https://www.kaggle.com/models/google/aiy/tfLite/vision-classifier-birds-v1/3?tfhub-redirect=true) to classify the species of a bird. It was heavily inspired by the [Who's at My Feeder](https://github.com/mmcc-xx/WhosAtMyFeeder/blob/master/speciesid.py) project. But, in this build, the classificaiton runs locally on a Raspberry Pi 5 and transmits the Base64 encoded image and the classifcation results over serial to a [Particle Boron](https://store.particle.io/products/boron-lte-cat-m1-noram-with-ethersim-4th-gen). The Particle device should be running the [Flockr Transmitter firmware](https://github.com/epietrowicz/flockr-transmitter) which handles uploading the image and classification results. 
 
 ![sample-classification-particle](https://github.com/user-attachments/assets/ab706e47-30df-44bb-af55-a7fb3d8975ed)
 
