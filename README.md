@@ -5,7 +5,7 @@ But, in this build, the classificaiton runs locally on a Raspberry Pi 5 and tran
 
 ![sample-classification-particle](https://github.com/user-attachments/assets/ab706e47-30df-44bb-af55-a7fb3d8975ed)
 
-The Pi also hosts a web server that can be used to view the current feed if WiFi is available, but WiFi access is not necessary for this system to work.
+The Pi also hosts a web server that can be used to view the current feed if WiFi is available, but WiFi access is not necessary for this system to work. If you want to use the demo video, you will need to add a `test-video.mp4` file to the root of the project's directory. I've [provided a test video](https://drive.google.com/file/d/1tTz1Gps4WgYqqTi08huPQqQcx8DzA_3P/view?usp=sharing), but I cannot promise it will be hosted at this link indefinitely. I encourage sourcing your own.
 
 ![sample-classification](https://github.com/user-attachments/assets/ee12eabd-3c7d-4980-957e-c50986bf321e)
 
