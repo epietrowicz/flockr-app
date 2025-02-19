@@ -4,12 +4,15 @@
 
 <body>
     <h1>Live Video Feed</h1>
+    <p id="label">Unknown</p>
+    <p id="score">0</p>
     <img src="{{ url_for('video_capture') }}" width="640" height="480">
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
 
         socket.on('result', function (data) {
-            document.getElementById('textDisplay').innerText = data.result;
+            document.getElementById('label').innerText = data?.label ?? "Unknown";
+            document.getElementById('score').innerText = data?.score ?? 0;
         });
     </script>
 </body>
