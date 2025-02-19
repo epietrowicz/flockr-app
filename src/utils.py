@@ -166,20 +166,16 @@ def generate_frames(is_live, socketio):
                 timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000
                 common_name = get_common_name(display_name)
                 if common_name != last_bird_seen:
-                    # emit serial info
-                    # print(f"Sending {common_name}")
-                    
                     send_image(frame)
                     serial_str = f"INFERENCE={common_name},{score}\n"
                     ser.write(serial_str.encode())
                     last_bird_seen = common_name
                 result_text = [f"Label: {common_name} Score: {score}"]
                 print(f"Timestamp: {timestamp} seconds, {result_text}")
-                frame_text = result_text
+                socketio.emit("result", {'label': common_name, 'score': score})
             else:
                 frame_text = ["Unknown"]
 
-        socketio.emit("result", {'result': frame_text})
         yield (
             b"--frame\r\n"
             b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n"
