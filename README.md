@@ -18,7 +18,7 @@ To build: `docker-compose up --build`
 
 To run the container: `docker-compose up`
 
-Navigate to <rpi_ip>:5000 with any browser on the same network to view the live feed and test the classification.
+Navigate to `<rpi_ip>:5000` with any browser on the same network to view the live feed and test the classification.
 
 ## Possible Errors
 
