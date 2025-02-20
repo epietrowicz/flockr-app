@@ -14,6 +14,8 @@ The Pi also hosts a web server that can be used to view the current feed if WiFi
 
 Make sure that the Particle board and USB camera are plugged in **before** starting up the container.
 
+![IMG_3300](https://github.com/user-attachments/assets/41810e93-3c27-4ab7-8f80-a9f9730556ef)
+
 To build: `docker-compose up --build`
 
 To run the container: `docker-compose up`
